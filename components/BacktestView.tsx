@@ -355,7 +355,8 @@ const BacktestView: React.FC = () => {
   }
 
   // --- Render Overview Mode ---
-  if (!activeSessionId) {
+  // Fix: Check if activeSession exists in addition to activeSessionId to prevent TS errors and runtime crashes
+  if (!activeSessionId || !activeSession) {
     return (
       <div className="p-8 max-w-6xl mx-auto h-full flex flex-col animate-fade-in text-slate-900">
          <div className="flex justify-between items-center mb-8">
@@ -460,6 +461,7 @@ const BacktestView: React.FC = () => {
   }
 
   // --- Render Active Session Mode ---
+  // activeSession is guaranteed defined here due to the check above
   const sessionStats = calculateSessionStats(activeSession.trades);
 
   return (

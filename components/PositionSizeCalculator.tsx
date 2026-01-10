@@ -223,7 +223,9 @@ const PositionSizeCalculator: React.FC = () => {
                       <div>
                           <label className="text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5 block flex items-center gap-1">
                               Contract Size
-                              <Info size={12} className="text-slate-400 cursor-help" title="Units per 1 Lot. E.g. 100,000 for Standard Forex." />
+                              <span title="Units per 1 Lot. E.g. 100,000 for Standard Forex." className="cursor-help flex items-center">
+                                <Info size={12} className="text-slate-400" />
+                              </span>
                           </label>
                           <input 
                               type="number" 
@@ -238,7 +240,9 @@ const PositionSizeCalculator: React.FC = () => {
                       <div>
                           <label className="text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5 block flex items-center gap-1">
                               Exchange Rate (Optional)
-                              <Info size={12} className="text-slate-400 cursor-help" title="Price of the pair. Required if Quote Currency != Account Currency (e.g. trading USDJPY with USD account)." />
+                              <span title="Price of the pair. Required if Quote Currency != Account Currency (e.g. trading USDJPY with USD account)." className="cursor-help flex items-center">
+                                <Info size={12} className="text-slate-400" />
+                              </span>
                           </label>
                           <input 
                               type="number" 
@@ -309,7 +313,9 @@ const PositionSizeCalculator: React.FC = () => {
                       <div>
                           <label className="text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5 block flex items-center gap-1">
                               Slippage (Points) <span className="text-slate-300 font-normal normal-case">(Optional)</span>
-                              <Info size={12} className="text-slate-400 cursor-help" title="Added to Stop Distance for safer risk sizing" />
+                              <span title="Added to Stop Distance for safer risk sizing" className="cursor-help flex items-center">
+                                <Info size={12} className="text-slate-400" />
+                              </span>
                           </label>
                           <input 
                               type="number" 
