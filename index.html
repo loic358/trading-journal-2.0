@@ -20,7 +20,6 @@
                 red: '#DC2626',  // Red-600
                 dark: '#000000', // True Black
               },
-              // Overriding Slate to be "True Black/Gray" (Zinc-like) instead of Blue-Gray
               slate: {
                 50: '#fafafa',
                 100: '#f4f4f5',
@@ -29,11 +28,11 @@
                 400: '#a1a1aa',
                 500: '#71717a',
                 600: '#52525b',
-                700: '#3f3f46',  // Borders in dark mode
-                800: '#18181b',  // Card backgrounds in dark mode
-                850: '#121212',  // Hover states / Secondary
-                900: '#09090b',  // Dropdowns / Inputs
-                950: '#000000',  // Main Backgrounds
+                700: '#3f3f46',
+                800: '#18181b',
+                850: '#121212',
+                900: '#09090b',
+                950: '#000000',
               }
             },
             animation: {
@@ -56,7 +55,6 @@
     </script>
     <style>
       body {
-        /* Default to white for landing page */
         background-color: #ffffff;
         color: #09090b;
       }
@@ -72,7 +70,6 @@
       .gradient-bg {
         background: linear-gradient(135deg, #2563EB 0%, #DC2626 100%);
       }
-      /* Custom scrollbar */
       ::-webkit-scrollbar {
         width: 8px;
         height: 8px;
@@ -94,16 +91,16 @@
   <script type="importmap">
 {
   "imports": {
-    "@google/genai": "https://esm.sh/@google/genai@^1.35.0",
-    "react/": "https://esm.sh/react@^19.2.3/",
     "react": "https://esm.sh/react@^19.2.3",
     "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-    "recharts": "https://esm.sh/recharts@^3.6.0",
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "@google/genai": "https://esm.sh/@google/genai@^1.35.0",
     "lucide-react": "https://esm.sh/lucide-react@^0.562.0",
-    "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.2",
+    "recharts": "https://esm.sh/recharts@^3.6.0",
+    "react-markdown": "https://esm.sh/react-markdown@^10.1.0",
     "@supabase/supabase-js": "https://esm.sh/@supabase/supabase-js@^2.90.1",
     "vite": "https://esm.sh/vite@^7.3.1",
-    "react-markdown": "https://esm.sh/react-markdown@^10.1.0"
+    "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.2"
   }
 }
 </script>
