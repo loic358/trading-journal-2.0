@@ -1,0 +1,113 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TradePulse</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+            },
+            colors: {
+              brand: {
+                blue: '#2563EB', // Blue-600
+                red: '#DC2626',  // Red-600
+                dark: '#000000', // True Black
+              },
+              // Overriding Slate to be "True Black/Gray" (Zinc-like) instead of Blue-Gray
+              slate: {
+                50: '#fafafa',
+                100: '#f4f4f5',
+                200: '#e4e4e7',
+                300: '#d4d4d8',
+                400: '#a1a1aa',
+                500: '#71717a',
+                600: '#52525b',
+                700: '#3f3f46',  // Borders in dark mode
+                800: '#18181b',  // Card backgrounds in dark mode
+                850: '#121212',  // Hover states / Secondary
+                900: '#09090b',  // Dropdowns / Inputs
+                950: '#000000',  // Main Backgrounds
+              }
+            },
+            animation: {
+              'fade-in': 'fadeIn 0.5s ease-out',
+              'slide-up': 'slideUp 0.5s ease-out',
+            },
+            keyframes: {
+              fadeIn: {
+                '0%': { opacity: '0' },
+                '100%': { opacity: '1' },
+              },
+              slideUp: {
+                '0%': { transform: 'translateY(20px)', opacity: '0' },
+                '100%': { transform: 'translateY(0)', opacity: '1' },
+              }
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      body {
+        /* Default to white for landing page */
+        background-color: #ffffff;
+        color: #09090b;
+      }
+      .dark body {
+        background-color: #000000;
+        color: #ffffff;
+      }
+      .gradient-text {
+        background: linear-gradient(135deg, #2563EB 0%, #DC2626 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      .gradient-bg {
+        background: linear-gradient(135deg, #2563EB 0%, #DC2626 100%);
+      }
+      /* Custom scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent; 
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #d4d4d8; 
+        border-radius: 4px;
+      }
+      .dark ::-webkit-scrollbar-track {
+        background: #000000;
+      }
+      .dark ::-webkit-scrollbar-thumb {
+        background: #3f3f46;
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "lucide-react": "https://esm.sh/lucide-react@^0.562.0",
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "react": "https://esm.sh/react@^19.2.3",
+    "recharts": "https://esm.sh/recharts@^3.6.0",
+    "@google/genai": "https://esm.sh/@google/genai@^1.34.0",
+    "react-markdown": "https://esm.sh/react-markdown@^10.1.0",
+    "@supabase/supabase-js": "https://esm.sh/@supabase/supabase-js@2.39.3"
+  }
+}
+</script>
+</head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>

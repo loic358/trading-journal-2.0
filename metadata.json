@@ -1,0 +1,5 @@
+{
+  "name": "Tradeflow",
+  "description": "A high-performance, dark-themed trading journal featuring equity curves, trade logs, playbooks, and an AI trading coach powered by Gemini.",
+  "requestFramePermissions": []
+}
