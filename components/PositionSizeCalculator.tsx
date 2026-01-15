@@ -113,8 +113,8 @@ const PositionSizeCalculator: React.FC = () => {
   const activePreset = INSTRUMENT_PRESETS.find(p => p.id === selectedPresetId);
 
   return (
-    <div className="p-8 max-w-6xl mx-auto h-full flex flex-col animate-fade-in text-slate-900">
-      <div className="mb-8 flex justify-between items-start">
+    <div className="p-4 md:p-8 max-w-6xl mx-auto h-full flex flex-col animate-fade-in text-slate-900">
+      <div className="mb-8 flex flex-col md:flex-row justify-between items-start gap-4">
          <div>
              <div className="inline-flex items-center justify-center p-3 bg-white shadow-sm border border-slate-200 rounded-xl mb-4 text-brand-blue">
                  <Calculator size={32} />
@@ -126,7 +126,7 @@ const PositionSizeCalculator: React.FC = () => {
              </p>
          </div>
          {activePreset && (
-             <div className="hidden md:block bg-blue-50 border border-blue-100 p-4 rounded-xl max-w-xs">
+             <div className="bg-blue-50 border border-blue-100 p-4 rounded-xl max-w-xs w-full md:w-auto">
                  <div className="flex items-center gap-2 text-brand-blue font-bold mb-1">
                      <Info size={16} />
                      Contract Spec:

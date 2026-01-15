@@ -71,7 +71,7 @@ const TradeLog: React.FC<TradeLogProps> = ({ trades, onSaveTrade, onDeleteTrade 
         setHasUnsavedChanges(false);
         setEditForm({});
     }
-  }, [selectedTrade?.id, trades]); // Added trades dependency to update view if background sync happens
+  }, [selectedTrade?.id, trades]);
 
   // Initialize edit form when entering edit mode
   useEffect(() => {
@@ -241,9 +241,6 @@ const TradeLog: React.FC<TradeLogProps> = ({ trades, onSaveTrade, onDeleteTrade 
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0] && selectedTrade) {
-      // Ideally we upload to Supabase Storage, for now using base64/URL object for session
-      // For persistent images with Supabase, we would upload there.
-      // Keeping object URL for now as placeholder for full storage integration
       const file = e.target.files[0];
       const imageUrl = URL.createObjectURL(file);
       
@@ -312,28 +309,28 @@ const TradeLog: React.FC<TradeLogProps> = ({ trades, onSaveTrade, onDeleteTrade 
   }
 
   return (
-    <div className="p-8 h-full flex flex-col animate-fade-in text-slate-900 overflow-hidden">
+    <div className="p-4 md:p-8 h-full flex flex-col animate-fade-in text-slate-900 overflow-hidden relative">
       {/* Header */}
-      <div className="flex justify-between items-end mb-6 shrink-0">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-6 shrink-0 gap-4">
         <div>
             <h2 className="text-3xl font-extrabold text-slate-900 mb-2">{t('tradeLog')}</h2>
             <p className="text-slate-500 font-medium">{t('logDescription')}</p>
         </div>
-        <div className="flex gap-3">
-            <div className="relative group">
+        <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+            <div className="relative group w-full md:w-auto">
                 <Search className="absolute left-3 top-2.5 text-slate-400 group-focus-within:text-brand-blue transition-colors" size={18} />
                 <input 
                     type="text" 
                     placeholder={t('searchPlaceholder')}
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="bg-white border border-slate-200 text-slate-900 pl-10 pr-4 py-2 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-blue/20 focus:border-brand-blue w-64 shadow-sm transition-all"
+                    className="bg-white border border-slate-200 text-slate-900 pl-10 pr-4 py-2 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-blue/20 focus:border-brand-blue w-full md:w-64 shadow-sm transition-all"
                 />
             </div>
-            <div className="relative">
+            <div className="relative w-full md:w-auto">
                 <button 
                     onClick={() => setIsFilterOpen(!isFilterOpen)}
-                    className={`flex items-center gap-2 px-4 py-2 border rounded-xl text-sm font-semibold shadow-sm transition-all ${
+                    className={`w-full md:w-auto flex items-center justify-center gap-2 px-4 py-2 border rounded-xl text-sm font-semibold shadow-sm transition-all ${
                         isFilterOpen || filterStatus !== 'ALL' || filterMistake !== 'ALL'
                         ? 'bg-brand-blue text-white border-brand-blue'
                         : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'
@@ -344,7 +341,7 @@ const TradeLog: React.FC<TradeLogProps> = ({ trades, onSaveTrade, onDeleteTrade 
                 </button>
                 
                 {isFilterOpen && (
-                    <div className="absolute right-0 mt-2 w-64 bg-white border border-slate-200 rounded-xl shadow-xl z-20 p-2 animate-fade-in max-h-96 overflow-y-auto">
+                    <div className="absolute right-0 mt-2 w-full md:w-64 bg-white border border-slate-200 rounded-xl shadow-xl z-20 p-2 animate-fade-in max-h-96 overflow-y-auto">
                         <div className="text-xs font-bold text-slate-400 uppercase px-2 py-1 mb-1">{t('status')}</div>
                         {['ALL', 'WIN', 'LOSS', 'BREAK_EVEN'].map((status) => (
                             <button
@@ -396,12 +393,12 @@ const TradeLog: React.FC<TradeLogProps> = ({ trades, onSaveTrade, onDeleteTrade 
       </div>
 
       {/* Main Content Area: Split View */}
-      <div className="flex gap-6 flex-1 min-h-0">
+      <div className="flex flex-col md:flex-row gap-6 flex-1 min-h-0 relative">
         
         {/* Left: Trade Table */}
         <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm flex flex-col flex-1 min-h-0">
-            <div className="overflow-auto flex-1">
-                <table className="w-full text-left border-collapse relative">
+            <div className="overflow-x-auto flex-1">
+                <table className="w-full text-left border-collapse relative min-w-[800px]">
                     <thead className="sticky top-0 z-10">
                         <tr className="border-b border-slate-100 bg-slate-50 text-xs uppercase text-slate-500 tracking-wider">
                         <th className="px-6 py-4 font-bold">{t('date')}</th>
@@ -502,10 +499,14 @@ const TradeLog: React.FC<TradeLogProps> = ({ trades, onSaveTrade, onDeleteTrade 
         </div>
 
         {/* Right: Trade Detail View */}
+        {/* On Mobile: Full screen fixed overlay. On Desktop: Side Panel */}
         {selectedTrade && (
-            <div className="w-[420px] bg-white border border-slate-200 rounded-2xl shadow-2xl flex flex-col animate-slide-up shrink-0 overflow-hidden">
+            <div className={`
+                bg-white border border-slate-200 rounded-2xl shadow-2xl flex flex-col animate-slide-up overflow-hidden
+                fixed inset-0 z-50 w-full h-full md:relative md:w-[420px] md:h-auto md:shrink-0
+            `}>
                 {/* Panel Header */}
-                <div className="p-6 border-b border-slate-100 flex justify-between items-start bg-slate-50">
+                <div className="p-6 border-b border-slate-100 flex justify-between items-start bg-slate-50 shrink-0">
                     <div className="flex-1 mr-4">
                         {isEditing ? (
                             <div className="space-y-3">

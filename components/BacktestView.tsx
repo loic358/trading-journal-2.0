@@ -355,20 +355,19 @@ const BacktestView: React.FC = () => {
   }
 
   // --- Render Overview Mode ---
-  // Fix: Check if activeSession exists in addition to activeSessionId to prevent TS errors and runtime crashes
   if (!activeSessionId || !activeSession) {
     return (
-      <div className="p-8 max-w-6xl mx-auto h-full flex flex-col animate-fade-in text-slate-900">
-         <div className="flex justify-between items-center mb-8">
+      <div className="p-4 md:p-8 max-w-6xl mx-auto h-full flex flex-col animate-fade-in text-slate-900">
+         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
             <div>
               <h2 className="text-3xl font-extrabold text-slate-900 mb-2">Backtesting</h2>
               <p className="text-slate-500 font-medium">Test strategies and build intuition without risking capital.</p>
             </div>
-            <div className="flex gap-3">
+            <div className="flex gap-3 w-full md:w-auto overflow-x-auto pb-1 md:pb-0">
                 {selectedSessionIds.length > 1 && (
                     <button 
                       onClick={() => setShowComparison(true)}
-                      className="px-5 py-2.5 bg-white border border-brand-blue text-brand-blue font-bold rounded-xl shadow-sm hover:bg-blue-50 transition-all flex items-center gap-2 animate-fade-in"
+                      className="px-5 py-2.5 bg-white border border-brand-blue text-brand-blue font-bold rounded-xl shadow-sm hover:bg-blue-50 transition-all flex items-center gap-2 animate-fade-in whitespace-nowrap"
                     >
                       <BarChart2 size={20} /> Compare ({selectedSessionIds.length})
                     </button>
@@ -376,14 +375,14 @@ const BacktestView: React.FC = () => {
                 {selectedSessionIds.length > 0 && (
                     <button 
                       onClick={() => setSelectedSessionIds([])}
-                      className="px-3 py-2.5 text-slate-400 hover:text-slate-600 transition-all"
+                      className="px-3 py-2.5 text-slate-400 hover:text-slate-600 transition-all whitespace-nowrap"
                     >
                         Clear
                     </button>
                 )}
                 <button 
                   onClick={() => setIsCreating(true)}
-                  className="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-lg shadow-indigo-200 transition-all flex items-center gap-2"
+                  className="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-lg shadow-indigo-200 transition-all flex items-center gap-2 whitespace-nowrap ml-auto"
                 >
                   <Plus size={20} /> New Session
                 </button>
@@ -461,29 +460,28 @@ const BacktestView: React.FC = () => {
   }
 
   // --- Render Active Session Mode ---
-  // activeSession is guaranteed defined here due to the check above
   const sessionStats = calculateSessionStats(activeSession.trades);
 
   return (
     <div className="h-full flex flex-col animate-fade-in text-slate-900 overflow-hidden bg-white">
         {/* Header Bar */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200 shrink-0 bg-white z-20 shadow-sm">
-             <div className="flex items-center gap-4">
+        <div className="flex flex-col md:flex-row items-center justify-between px-6 py-4 border-b border-slate-200 shrink-0 bg-white z-20 shadow-sm gap-4">
+             <div className="flex items-center gap-4 w-full md:w-auto">
                  <button 
                     onClick={() => setActiveSessionId(null)}
                     className="p-2 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-700 transition-colors"
                  >
                     <ChevronLeft size={24} />
                  </button>
-                 <div>
-                    <h2 className="text-xl font-extrabold text-slate-900 flex items-center gap-2">
-                       {activeSession.name}
-                       <span className="text-[10px] font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded border border-indigo-100 uppercase tracking-wider">Simulating {activeSession.symbol}</span>
+                 <div className="overflow-hidden">
+                    <h2 className="text-xl font-extrabold text-slate-900 flex items-center gap-2 whitespace-nowrap">
+                       <span className="truncate">{activeSession.name}</span>
+                       <span className="hidden sm:inline-block text-[10px] font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded border border-indigo-100 uppercase tracking-wider">Simulating {activeSession.symbol}</span>
                     </h2>
                  </div>
              </div>
-             <div className="flex gap-4">
-                 <div className="bg-slate-50 border border-slate-100 px-4 py-2 rounded-xl flex items-center gap-3">
+             <div className="flex gap-4 w-full md:w-auto justify-end">
+                 <div className="bg-slate-50 border border-slate-100 px-4 py-2 rounded-xl flex items-center gap-3 w-full justify-between md:w-auto">
                      <div className="text-right">
                          <div className="text-[10px] uppercase font-bold text-slate-400">Win Rate</div>
                          <div className="font-bold font-mono text-emerald-500 text-sm">{sessionStats.winRate}%</div>
@@ -507,15 +505,17 @@ const BacktestView: React.FC = () => {
         <div className="flex flex-col flex-1 min-h-0 overflow-hidden">
             
             {/* Top: Chart Area */}
-            <div className="h-[60%] w-full bg-slate-50 p-4 pb-0">
+            {/* On Mobile: auto height. On Desktop: Fixed percentage */}
+            <div className="h-96 md:h-[60%] w-full bg-slate-50 p-4 pb-0 shrink-0">
                 <TradingViewChart symbol={activeSession.symbol} />
             </div>
 
             {/* Bottom: Logs & Controls */}
-            <div className="flex-1 flex min-h-0 border-t border-slate-200 bg-white">
+            {/* Mobile: Stack vertically. Desktop: Flex Row */}
+            <div className="flex-1 flex flex-col lg:flex-row min-h-0 border-t border-slate-200 bg-white overflow-hidden">
                 
                 {/* Left: Input Panel */}
-                <div className="w-80 shrink-0 border-r border-slate-200 p-4 overflow-y-auto">
+                <div className="w-full lg:w-80 shrink-0 border-r-0 lg:border-r border-b lg:border-b-0 border-slate-200 p-4 overflow-y-auto max-h-64 lg:max-h-full">
                      <h3 className="font-bold text-slate-900 mb-4 flex items-center gap-2 text-sm uppercase tracking-wide">
                         <Target size={16} className="text-indigo-600" />
                         Quick Log
@@ -586,48 +586,69 @@ const BacktestView: React.FC = () => {
 
                 {/* Right: Trade List */}
                 <div className="flex-1 flex flex-col min-h-0 bg-slate-50/50">
-                    <div className="p-3 border-b border-slate-200 flex justify-between items-center bg-white">
+                    <div className="p-3 border-b border-slate-200 flex justify-between items-center bg-white sticky top-0 z-10">
                         <h3 className="font-bold text-slate-700 text-xs uppercase tracking-wide">History</h3>
                         <span className="text-[10px] font-bold text-slate-400">{activeSession.trades.length} Trades</span>
                     </div>
                     
-                    <div className="overflow-y-auto flex-1">
+                    <div className="overflow-y-auto flex-1 p-2 md:p-0">
                         {activeSession.trades.length === 0 ? (
-                            <div className="h-full flex flex-col items-center justify-center text-slate-400 opacity-60 p-4">
+                            <div className="h-full flex flex-col items-center justify-center text-slate-400 opacity-60 p-4 min-h-[100px]">
                                 <Activity size={32} className="mb-2" />
                                 <p className="text-xs">No trades logged yet.</p>
                             </div>
                         ) : (
-                            <table className="w-full text-left">
-                                 <thead className="bg-white sticky top-0 z-10 shadow-sm text-[10px] text-slate-500 uppercase font-semibold">
-                                     <tr>
-                                         <th className="px-4 py-2">#</th>
-                                         <th className="px-4 py-2">Type</th>
-                                         <th className="px-4 py-2">Setup</th>
-                                         <th className="px-4 py-2">Notes</th>
-                                         <th className="px-4 py-2 text-right">Result</th>
-                                     </tr>
-                                 </thead>
-                                 <tbody className="divide-y divide-slate-100 text-xs">
-                                     {activeSession.trades.map((trade, idx) => (
-                                         <tr key={trade.id} className="hover:bg-white transition-colors">
-                                             <td className="px-4 py-2 text-slate-400 font-mono">{(activeSession.trades.length - idx).toString().padStart(2, '0')}</td>
-                                             <td className="px-4 py-2">
-                                                <span className={`px-1.5 py-0.5 rounded font-bold uppercase ${trade.type === 'LONG' ? 'text-blue-600 bg-blue-50' : 'text-orange-600 bg-orange-50'}`}>
+                            <div className="w-full">
+                                {/* Mobile List View */}
+                                <div className="block lg:hidden space-y-2">
+                                    {activeSession.trades.map((trade, idx) => (
+                                        <div key={trade.id} className="bg-white border border-slate-100 rounded-lg p-3 shadow-sm">
+                                            <div className="flex justify-between items-center mb-1">
+                                                <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold uppercase ${trade.type === 'LONG' ? 'text-blue-600 bg-blue-50' : 'text-orange-600 bg-orange-50'}`}>
                                                     {trade.type}
                                                 </span>
-                                             </td>
-                                             <td className="px-4 py-2 text-slate-600 font-medium">{trade.setup}</td>
-                                             <td className="px-4 py-2 text-slate-500 truncate max-w-[200px]">{trade.notes}</td>
-                                             <td className="px-4 py-2 text-right">
-                                                 <span className={`font-mono font-bold ${trade.rMultiple >= 0 ? 'text-emerald-500' : 'text-red-500'}`}>
-                                                     {trade.rMultiple > 0 ? '+' : ''}{trade.rMultiple}R
-                                                 </span>
-                                             </td>
+                                                <span className={`font-mono font-bold text-sm ${trade.rMultiple >= 0 ? 'text-emerald-500' : 'text-red-500'}`}>
+                                                    {trade.rMultiple > 0 ? '+' : ''}{trade.rMultiple}R
+                                                </span>
+                                            </div>
+                                            <div className="text-sm font-medium text-slate-700">{trade.setup}</div>
+                                            <div className="text-xs text-slate-400 truncate">{trade.notes}</div>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                {/* Desktop Table View */}
+                                <table className="hidden lg:table w-full text-left">
+                                     <thead className="bg-white sticky top-0 z-10 shadow-sm text-[10px] text-slate-500 uppercase font-semibold">
+                                         <tr>
+                                             <th className="px-4 py-2">#</th>
+                                             <th className="px-4 py-2">Type</th>
+                                             <th className="px-4 py-2">Setup</th>
+                                             <th className="px-4 py-2">Notes</th>
+                                             <th className="px-4 py-2 text-right">Result</th>
                                          </tr>
-                                     ))}
-                                 </tbody>
-                            </table>
+                                     </thead>
+                                     <tbody className="divide-y divide-slate-100 text-xs">
+                                         {activeSession.trades.map((trade, idx) => (
+                                             <tr key={trade.id} className="hover:bg-white transition-colors">
+                                                 <td className="px-4 py-2 text-slate-400 font-mono">{(activeSession.trades.length - idx).toString().padStart(2, '0')}</td>
+                                                 <td className="px-4 py-2">
+                                                    <span className={`px-1.5 py-0.5 rounded font-bold uppercase ${trade.type === 'LONG' ? 'text-blue-600 bg-blue-50' : 'text-orange-600 bg-orange-50'}`}>
+                                                        {trade.type}
+                                                    </span>
+                                                 </td>
+                                                 <td className="px-4 py-2 text-slate-600 font-medium">{trade.setup}</td>
+                                                 <td className="px-4 py-2 text-slate-500 truncate max-w-[200px]">{trade.notes}</td>
+                                                 <td className="px-4 py-2 text-right">
+                                                     <span className={`font-mono font-bold ${trade.rMultiple >= 0 ? 'text-emerald-500' : 'text-red-500'}`}>
+                                                         {trade.rMultiple > 0 ? '+' : ''}{trade.rMultiple}R
+                                                     </span>
+                                                 </td>
+                                             </tr>
+                                         ))}
+                                     </tbody>
+                                </table>
+                            </div>
                         )}
                     </div>
                 </div>

@@ -17,12 +17,14 @@ import { MOCK_TRADES } from './constants';
 import { LanguageProvider } from './contexts/LanguageContext';
 import { supabase } from './services/supabase';
 import { tradeService } from './services/tradeService';
+import { Menu } from 'lucide-react';
 
 const AppContent: React.FC = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [user, setUser] = useState<User | null>(null);
   const [trades, setTrades] = useState<Trade[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   // Auth Listener
   useEffect(() => {
@@ -100,16 +102,11 @@ const AppContent: React.FC = () => {
 
   // Bulk Import Handler
   const handleImportTrades = async (newTrades: Trade[]) => {
-    // We need to save these to Supabase one by one or via bulk insert if we added that to service
-    // For now, let's just do optimistic UI update and background save loop
     setLoading(true);
     try {
-      // In a real app, use supabase.from('trades').insert([array])
-      // We will loop through for simplicity with current service structure or basic insert
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      // Clean trades for DB insertion (remove temp IDs)
       const dbPayloads = newTrades.map(t => ({
         user_id: user.id,
         symbol: t.symbol,
@@ -130,7 +127,7 @@ const AppContent: React.FC = () => {
       const { error } = await supabase.from('trades').insert(dbPayloads);
       if (error) throw error;
       
-      await loadTrades(); // Refresh from server to get real IDs
+      await loadTrades(); 
       setActiveTab('log');
     } catch (error) {
       console.error('Import error:', error);
@@ -144,14 +141,11 @@ const AppContent: React.FC = () => {
     await supabase.auth.signOut();
   };
 
-  // Demo Mode Fallback
   const handleDemoLogin = () => {
-      // Create a fake user state without Supabase session for Demo
       setUser({ id: 'demo', name: 'Demo Trader', email: 'demo@tradepulse.ai' });
       setTrades(MOCK_TRADES);
   };
 
-  // If not logged in, show the Landing Page with Login
   if (!user && !loading) {
     return <LandingPage onDemoLogin={handleDemoLogin} />;
   }
@@ -195,13 +189,54 @@ const AppContent: React.FC = () => {
     }
   };
 
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab);
+    setIsSidebarOpen(false); // Close sidebar on mobile when navigating
+  };
+
   return (
     <div className="antialiased">
-      <div className="flex min-h-screen bg-slate-50 dark:bg-black text-slate-900 dark:text-slate-100 font-sans selection:bg-brand-blue/30 transition-colors duration-200">
-        <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
+      <div className="flex min-h-screen bg-slate-50 dark:bg-black text-slate-900 dark:text-slate-100 font-sans selection:bg-brand-blue/30 transition-colors duration-200 relative">
+        
+        {/* Mobile Header */}
+        <div className="md:hidden fixed top-0 left-0 right-0 h-16 bg-black border-b border-slate-800 z-40 flex items-center justify-between px-4">
+            <div className="flex items-center gap-2">
+                <div className="w-8 h-8 bg-gradient-to-tr from-brand-blue to-brand-red rounded-lg flex items-center justify-center">
+                    <span className="text-white font-bold">T</span>
+                </div>
+                <h1 className="text-lg font-bold text-white tracking-tight">TradePulse</h1>
+            </div>
+            <button 
+                onClick={() => setIsSidebarOpen(true)}
+                className="p-2 text-slate-300 hover:text-white"
+            >
+                <Menu size={24} />
+            </button>
+        </div>
+
+        {/* Mobile Overlay Backdrop */}
+        {isSidebarOpen && (
+            <div 
+                className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 md:hidden animate-fade-in"
+                onClick={() => setIsSidebarOpen(false)}
+            ></div>
+        )}
+
+        {/* Sidebar Container - Responsive */}
+        <div className={`
+            fixed top-0 left-0 bottom-0 z-50 transform transition-transform duration-300 ease-in-out
+            ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} 
+            md:translate-x-0
+        `}>
+            <Sidebar 
+                activeTab={activeTab} 
+                setActiveTab={handleTabChange} 
+                onClose={() => setIsSidebarOpen(false)} 
+            />
+        </div>
         
         {/* Main Content Area */}
-        <main className="ml-64 flex-1 h-screen overflow-y-auto scroll-smooth">
+        <main className="flex-1 w-full md:ml-64 h-screen overflow-y-auto scroll-smooth pt-16 md:pt-0">
           {/* Top decorative gradient line */}
           <div className="h-1 w-full bg-gradient-to-r from-brand-blue via-purple-500 to-brand-red opacity-80 sticky top-0 z-10"></div>
           
